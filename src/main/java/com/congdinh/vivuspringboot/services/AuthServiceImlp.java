@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class AuthServiceImlp implements AuthService, UserDetailsService {
     private MemberDAO memberDAO;
 
