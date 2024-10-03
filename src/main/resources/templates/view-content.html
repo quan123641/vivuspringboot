@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+    <style>
+        /* Loại bỏ thanh cuộn ngang */
+        .table-container {
+            overflow-x: auto; /* Thêm thanh cuộn nếu cần */
+            white-space: nowrap; /* Giữ cho các ô không bị chia dòng */
+        }
+
+        table {
+            width: 100%; 
+        }
+
+        th, td {
+            text-align: left;
+        }
+
+        th {
+            position: relative; /* Để sắp xếp nút đúng vị trí */
+        }
+
+        td {
+            white-space: normal;
+            word-wrap: break-word; /* Buộc từ dài xuống dòng nếu vượt quá khung */
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="header">
+    <div class="custom-container">
+        <div class="header-block">
+            <button class="open-btn" onclick="openMenu()">&#9776;</button>
+            <a th:href="@{/home-page}">
+                <h1 class="header-title">CMS</h1>
+            </a>
+            <div class="header-profile">
+                <img src="media/profile.svg" alt="profile" />
+                <div class="header-profile__list">
+                    <a th:href="@{/edit-profile}" class="header-profile__item">
+                        <i class="fa-solid fa-user"></i><span>User profile</span>
+                    </a>
+                    <a th:href="@{/login}" class="header-profile__item">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="wrapper">
+    <aside class="side-bar">
+        <div class="close-block"><button class="close" onclick="closeMenu()">&times;</button></div>
+        <div class="side-bar__item">
+            <div class="side-bar__input-block">
+                <input type="text" placeholder="Search" />
+                <div class="side-bar__search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+            </div>
+        </div>
+        <a class="side-bar__item" th:href="@{/view-content}">
+            <div class="side-bar__logo">
+                <img src="media/view-contents.svg" alt="sym" />
+            </div>
+            <span>View contents</span>
+        </a>
+        <a class="side-bar__item" th:href="@{/add-content/{memberId}(memberId=${member.id})}">
+            <div class="side-bar__logo">
+                <img src="media/form-content.svg" alt="sym" />
+            </div>
+            <span>Add contents</span>
+        </a>
+    </aside>
+    <main class="main-component" id="view-content">
+        <div class="main-component-block">
+            <h1 class="main-component__heading">View Content</h1>
+            <div class="main-component__form">
+                <div class="form-title-block">
+                    <p class="form-title">View Content List</p>
+                </div>
+                <div class="table-container" id="view-content-table">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Brief</th>
+                            <th>
+                                Create on
+                                <a th:href="@{'/view-content?sort=createLocalDate&order=asc'}" class="text-blue-500" title="Sắp xếp tăng dần">
+                                    <i class="fa-solid fa-arrow-up" onclick=""></i>
+                                </a>
+                                <a th:href="@{'/view-content?sort=createLocalDate&order=desc'}" class="text-blue-500" title="Sắp xếp giảm dần">
+                                    <i class="fa-solid fa-arrow-down"></i>
+                                </a>
+                            </th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="content-table-body">
+                        <tr th:each="content : ${contents}">
+                            <td th:text="${content.id}"></td>
+                            <td th:text="${content.title}"></td>
+                            <td th:text="${content.brief}"></td>
+                            <td th:text="${content.createLocalDate}"></td>
+                            <td class="flex gap-4">
+                                <button type="button"
+                                        th:data-id="${content.id}"
+                                        th:data-title="${content.title}"
+                                        th:data-brief="${content.brief}"
+                                        th:data-description="${content.description}"
+                                        onclick="openCreateCategoryModal(this)"
+                                        class="btn btn-primary">
+                                    <i class="fa-solid fa-edit text-blue-500"></i>
+                                </button>
+
+                                <a th:href="@{'/view-content/delete/' + ${content.id}}" class="btn btn-danger">
+                                    <i class="fa-solid fa-trash text-red-500"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            /* medal edit content */
+            <div id="createCategoryModal" class="modal hidden fixed inset-0 bg-slate-950 bg-opacity-50 z-50 h-screen">
+                <div class="outer h-screen flex justify-center items-center">
+                    <div class="modal-content card bg-white border border-slate-300 rounded-md w-1/2">
+                        <div class="card-header p-3 flex justify-between items-center">
+                            <h2 class="text-2xl">Edit</h2>
+                            <button type="button" class="close" title="Close Modal" onclick="closeModal()">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                        </div>
+                        <form id="createCategoryForm" onsubmit="createCategory(); return false;">
+                            <div class="card-body p-3 border-y border-slate-300">
+                                <div> <input type="hidden" id="editId" name="editId" ></div>
+                                <div class="form-group mb-3">
+                                    <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Title:</label>
+                                    <input type="text" id="title" name="title"
+                                           class="p-2 border border-slate-300 w-full rounded-md" placeholder="Enter title...">
+                                    <div id="categoryNameError" class="hidden text-red-500 text-sm"></div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="brief" class="block text-sm font-medium text-gray-700 mb-2">Brief:</label>
+                                    <input type="text" id="brief" name="brief"
+                                           class="p-2 border border-slate-300 w-full rounded-md" placeholder="Enter brief...">
+                                    <div id="categoryNameError1" class="hidden text-red-500 text-sm"></div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="description"
+                                           class="block text-sm font-medium text-gray-700 mb-2">Description:</label>
+                                    <input type="text" id="description" name="description"
+                                           class="p-2 border border-slate-300 w-full rounded-md"
+                                           placeholder="Enter description...">
+                                    <div id="categoryDescriptionError" class="hidden text-red-500 text-sm"></div>
+                                </div>
+                            </div>
+                            <div class="card-footer p-3 flex justify-between">
+                                <button type="close" class="btn btn-primary" id="close" onclick="closeModal()">CLose</button>
+
+                                <button type="submit" class="btn btn-primary" id="submitBtn">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+<script  src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script th:src="@{/js/js.js}"></script>
+</html>

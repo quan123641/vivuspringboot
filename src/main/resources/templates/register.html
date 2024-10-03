@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="auth">
+        <div class="auth-container">
+            <h1 class="title">Register</h1>
+            <p class="text-red italic" th:text="${message}"></p>
+            <form class="auth-form" id="register-form" th:action="@{/register}" th:object="${member}" method="post">
+                <!-- Hiển thị thông báo lỗi chung -->
+                <!-- <p class="error" th:if="${message != null}" th:text="${message}"></p> -->
+
+                <!-- Trường username -->
+                <div class="input-block">
+                    <!-- <p class="error">Username is invalid</p> -->
+
+                    <!-- <p class="error" th:if="${#fields.hasFieldErrors('username')}" th:text="${#fields.errors('username')}"></p> -->
+                     <input class="auth-input" type="text" name="username" id="username" placeholder="Username"/>
+                </div>
+
+                <!-- Trường email -->
+                <div class="input-block">
+                    <!-- <p class="error" th:if="${#fields.hasFieldErrors('email')}" th:text="${#fields.errors('email')}"></p> -->
+                    <input class="auth-input" type="email" name="email" id="email" placeholder="E-mail" />
+                            <!-- th:value="${email != null ? email : ''}" -->
+                </div>
+
+                <!-- Trường password -->
+                <div class="input-block">
+                    <!-- <p class="error">Password is not match with rule</p> -->
+
+                    <!-- <p class="error" th:if="${#fields.hasFieldErrors('password')}" th:text="${#fields.errors('password')}"></p> -->
+                    <input class="auth-input" type="password" name="password" id="password" placeholder="Password" />
+                </div>
+
+                <!-- Trường re-password -->
+                <div class="input-block">
+                    <!-- <p class="error" th:if="${#fields.hasFieldErrors('rePassword')}" th:text="${#fields.errors('rePassword')}"></p> -->
+                    <input class="auth-input" type="password" name="confirmpassword" id="rePassword" placeholder="Re-password" />
+                </div>
+
+                <input type="submit" class="btn-form register-btn" value="Register" />
+            </form>
+            
+
+            <!-- Link đăng nhập -->
+            <a class="auth-navigate" th:href="@{/login}">Click here to login</a>
+        </div>
+    </div>
+    <!-- <script th:src="@{/js/script.js}"></script>
+	<script th:src="@{/js/validator.js}"></script> -->
+</body>
+
+</html>

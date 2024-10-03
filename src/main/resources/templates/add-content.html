@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+        <link rel="stylesheet" th:href="@{/css/style.css}" />
+        <link rel="stylesheet" th:href="@{/css/reset.css}" />
+    </head>
+
+<body>
+    <div class="header">
+        <div class="custom-container">
+            <div class="header-block">
+                <button class="open-btn" onclick="openMenu()">&#9776;</button>
+                <a href="home-page.html">
+                    <h1 class="header-title">CMS</h1>
+                </a>
+                <div class="header-profile">
+                    <img th:src="@{/media/profile.svg}" alt="profile" />
+                    <div class="header-profile__list">
+                        <a th:href="@{/edit-profile}" class="header-profile__item">
+                            <i class="fa-solid fa-user"></i><span>User profile</span>
+                        </a>
+                        <a th:href="@{/login}" class="header-profile__item">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper">
+        <aside class="side-bar">
+            <div class="close-block"><button class="close" onclick="closeMenu()">&times;</button></div>
+            <div class="side-bar__item">
+                <div class="side-bar__input-block">
+                    <input type="text" placeholder="Search" />
+                    <div class="side-bar__search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                </div>
+            </div>
+            <a class="side-bar__item" th:href="@{/view-content}">
+                <div class="side-bar__logo">
+                    <img th:src="@{/media/view-contents.svg}" alt="sym" />
+                </div>
+                <span>View contents</span>
+            </a>
+            <a class="side-bar__item" th:href="@{/add-content}">
+                <div class="side-bar__logo">
+                    <img th:src="@{/media/form-content.svg}" alt="sym" />
+                </div>
+                <span>Add contents</span>
+            </a>
+        </aside>
+        <main class="main-component" id="add-content">
+         
+            <div class="main-component-block">
+                <h1 class="main-component__heading">
+                    Add Content
+                </h1>
+                <form th:action="@{/add-content/{memberId}(memberId=${member.id})}" id="add-content__form" class="main-component__form" th:object="${contents}" method="post">
+                    <div class="form-title-block" >
+                        <p class="form-title">Content Form Elements</p>
+                    </div>
+                    <div class="main-component-group">
+                        <p th:text="${message}"></p>
+                        <div class="input-block input-block-2">
+                            <label for="title" class="form__label">Title</label>
+                            <p class="error error-2">Title is invaid</p>
+                            <input th:field="*{title}" type="text" class="form-input" id="title" name="title" placeholder="Enter the title">
+                            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" type="text" class="text-red-500 text-sm">
+                            </div>                        </div>
+                        <div class="input-block input-block-2 text-area-block">
+                            <label for="brief" class="form__label">Brief</label>
+                            <p class="error error-2">Brief is required</p>
+                            <textarea th:field="*{brief}" id="brief" class="text-area" name="brief"></textarea>
+                            <div th:if="${#fields.hasErrors('brief')}" th:errors="*{brief}" type="text" class="text-red-500 text-sm">
+                        </div>
+                        <div class="input-block input-block-2 text-area-block">
+                            <label for="content" class="form__label">Content</label>
+                            <p class="error error-2">Content is required</p>
+                            <textarea th:field="*{description}" id="content" class="text-area content-txtarea" name="description"></textarea>
+                            <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" type="text" class="text-red-500 text-sm">
+                            
+                        </div>
+                        <div class="form-action__wrapper main-component__wrapper">
+                            <button type="submit" class="btn-form btn-form-2">Submit Button</button>
+                            <button type="reset" class="btn-form btn-form-2">Reset Button</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+       integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+       crossorigin="anonymous" referrerpolicy="no-referrer">
+       </script>
+    <script th:src="@{/js/script.js}"></script>
+ <script th:src="@{/js/validator.js}"></script> 
+  <script th:src="@{/js/loading.js}"></script>  -->
+
+</body>
+
+</html>
